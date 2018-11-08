@@ -10,5 +10,5 @@ druid+connector/J
 cj.userName=root
 cj.passWord=root
 cj.driverClass=com.mysql.cj.jdbc.Driver`
-###### 故障转移配置,仅配置组内的从节点，优先级数值越大 越优先选择
-`cj.failoverUrl=mysqlx://root:root@[(address=192.168.32.128:24802,priority=2),(address=192.168.32.128:24803,priority=3)]/test?characterEncoding=UTF-8&useSSL=false`
+###### 故障转移配置,优先级按照出现在list的顺序
+`cj.failoverUrl=jdbc:mysql://192.168.32.128:24801,192.168.32.128:24802,192.168.32.128:24803/test?characterEncoding=UTF-8&useSSL=false`

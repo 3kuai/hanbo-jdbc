@@ -60,7 +60,8 @@ public class AutoSelectivePrimaryService implements Runnable {
     }
 
     private void selectivePrimary() {
-        try (Connection connection = DriverManager.getConnection(hanboProperties.getFailoverUrl());
+        try (Connection connection = DriverManager.getConnection(hanboProperties.getFailoverUrl(),
+                hanboProperties.getUserName(), hanboProperties.getPassWord());
              PreparedStatement preparedStatement = connection.prepareStatement(Q_SQL);
              ResultSet resultSet = preparedStatement.executeQuery()
         ) {
@@ -73,7 +74,11 @@ public class AutoSelectivePrimaryService implements Runnable {
             }
             String masterHost = stringBuilder.toString();
             Collection<String> hosts = ReplicationConnectionGroupManager.getMasterHosts(DEFAULT_GROUP);
-            //不一致则切换
+            if (hosts.contains("") || hosts.contains(null)) {
+                logger.warn("group has no master");
+                //TODO 告警
+                return;
+            }            //不一致则切换
             if (!hosts.contains(masterHost)) {
                 logger.info("start failover...");
                 //故障转移：把原始的主删除，再把一个被选举为主的从切为主
