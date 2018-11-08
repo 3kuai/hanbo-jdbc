@@ -1,11 +1,11 @@
 # springboot插件包：hanbo-starter
-`编译 cd proDir && mvn clena install`
+    cd proDir && mvn clena install
 
 ## 特性：
   druid+connector/J
 
-
-### 功能： 集成mysqlx,replication等协议实现客户端自动选主功能，结合服务端群组复制（单主模式）
+### 功能： 
+    集成mysqlx,replication等协议实现客户端自动选主功能，结合服务端群组复制（单主模式）
 
 ### 配置： application.properties
     #connect/J 单主模式设置:replicationEnableJMX=true&replicationConnectionGroup=default （动态切换主备的开关）
