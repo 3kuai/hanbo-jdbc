@@ -11,6 +11,24 @@ public class HanboProperties {
     private String passWord;
     private String failoverUrl;
     private String driverClass;
+    private long maxWait;
+    private int maxConn;
+
+    public long getMaxWait() {
+        return maxWait;
+    }
+
+    public void setMaxWait(long maxWait) {
+        this.maxWait = maxWait;
+    }
+
+    public int getMaxConn() {
+        return maxConn;
+    }
+
+    public void setMaxConn(int maxConn) {
+        this.maxConn = maxConn;
+    }
 
     public String getReplicationUrl() {
         return replicationUrl;

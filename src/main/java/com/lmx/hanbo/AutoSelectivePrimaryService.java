@@ -8,8 +8,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -35,6 +34,13 @@ public class AutoSelectivePrimaryService implements Runnable {
             "  FROM performance_schema.global_status" +
             "  WHERE VARIABLE_NAME= 'group_replication_primary_member'" +
             ");";
+    private Properties properties = new Properties();
+
+    {
+        properties.put("roundRobinLoadBalance", "true");
+        properties.put("replicationEnableJMX", "true");
+        properties.put("replicationConnectionGroup", "default");
+    }
 
     public AutoSelectivePrimaryService(HanboProperties hanboProperties) {
         this.hanboProperties = hanboProperties;
@@ -42,6 +48,8 @@ public class AutoSelectivePrimaryService implements Runnable {
     }
 
     public void init() {
+        properties.put("username", hanboProperties.getUserName());
+        properties.put("password", hanboProperties.getPassWord());
         thread.setName("AutoSelectivePrimary-Thread");
         if (hanboProperties.getFailoverUrl() != null)
             thread.start();
@@ -60,8 +68,7 @@ public class AutoSelectivePrimaryService implements Runnable {
     }
 
     private void selectivePrimary() {
-        try (Connection connection = DriverManager.getConnection(hanboProperties.getFailoverUrl(),
-                hanboProperties.getUserName(), hanboProperties.getPassWord());
+        try (Connection connection = DriverManager.getConnection(hanboProperties.getFailoverUrl(), properties);
              PreparedStatement preparedStatement = connection.prepareStatement(Q_SQL);
              ResultSet resultSet = preparedStatement.executeQuery()
         ) {
@@ -74,7 +81,7 @@ public class AutoSelectivePrimaryService implements Runnable {
             }
             String masterHost = stringBuilder.toString();
             Collection<String> hosts = ReplicationConnectionGroupManager.getMasterHosts(DEFAULT_GROUP);
-            if (hosts.contains("") || hosts.contains(null)) {
+            if (hosts.contains("") || hosts.contains("null") || hosts.contains(null)) {
                 logger.warn("group has no master");
                 //TODO 告警
                 return;

@@ -25,14 +25,18 @@ public class HanboAutoconfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "cj", value = {"driverClass", "userName", "passWord","replicationUrl"})
+    @ConditionalOnProperty(prefix = "cj", value = {"driverClass", "userName", "passWord", "replicationUrl"})
     DruidDataSource datasource() {
         DruidDataSource druidDataSource = new DruidDataSource();
         druidDataSource.setDriverClassName(hanboProperties.getDriverClass());
         druidDataSource.setUsername(hanboProperties.getUserName());
         druidDataSource.setPassword(hanboProperties.getPassWord());
         druidDataSource.setUrl(hanboProperties.getReplicationUrl());
-        druidDataSource.setMaxActive(8);
+        druidDataSource.setMaxActive(hanboProperties.getMaxConn());
+        druidDataSource.setMaxWait(hanboProperties.getMaxWait());
+        druidDataSource.setTestOnBorrow(true);
+        druidDataSource.setTestOnReturn(true);
+        druidDataSource.setValidationQuery("select 1");
         return druidDataSource;
     }
 
