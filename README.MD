@@ -1,8 +1,8 @@
-# springboot插件包：hanbo-starter
-    cd proDir && mvn clena install
+# springboot starter：hanbo-starter
+    cd proDir && mvn clean install
 
 ## 选型：
-    springboot+druid+connector/J
+    druid+connector/J
 
 ## 特性： 
     适用于mysql5.7+的群组复制（单主模式），基于connector/J的mysqlx、replication等协议实现的客户端自动选主以及负载均衡
